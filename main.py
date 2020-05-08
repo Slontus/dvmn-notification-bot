@@ -32,9 +32,10 @@ if __name__ == "__main__":
             task_status = get_status(LONG_POLLING_METHOD, 100, timestamp, token)
             if task_status['status'] == 'found':
                 timestamp = task_status['last_attempt_timestamp']
-                work_title = task_status['new_attempts'][0]['lesson_title']
-                solution_is_wrong = task_status['new_attempts'][0]['is_negative']
-                lesson_url = task_status['new_attempts'][0]['lesson_url']
+                lesson_result = task_status['new_attempts'][0]
+                work_title = lesson_result['lesson_title']
+                solution_is_wrong = lesson_result['is_negative']
+                lesson_url = lesson_result['lesson_url']
                 module = lesson_url.split('/')[2]
                 if solution_is_wrong:
                     step_to_do = 'Please correct errors and send it for checking.\n'
