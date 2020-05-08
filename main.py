@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 import logging
 
 DVMN_API = "https://dvmn.org/api/"
-METHOD_LONG = "long_polling/"
+LONG_POLLING_METHOD = "long_polling/"
 
 
 def get_status(method, timeout, _timestamp, _token):
@@ -32,7 +32,7 @@ if __name__ == "__main__":
     timestamp = None
     while True:
         try:
-            task_status = get_status(METHOD_LONG, 100, timestamp, token)
+            task_status = get_status(LONG_POLLING_METHOD, 100, timestamp, token)
             if task_status['status'] == 'found':
                 timestamp = task_status['last_attempt_timestamp']
                 work_title = task_status['new_attempts'][0]['lesson_title']
