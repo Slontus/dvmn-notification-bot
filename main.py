@@ -11,7 +11,7 @@ LONG_POLLING_METHOD = "long_polling/"
 
 def get_status(method, timeout, _timestamp, _token):
     url = "".join([DVMN_API, method])
-    header = {"Authorization": " ".join(["Token", _token])}
+    header = {"Authorization": f"Token {_token}"}
     payload = {"timestamp": _timestamp}
     try:
         response = requests.get(url, timeout=timeout, headers=header, params=payload)
@@ -41,7 +41,7 @@ if __name__ == "__main__":
                 module = lesson_url.split('/')[2]
                 if solution_is_wrong:
                     step_to_do = 'Please correct errors and send it for checking.\n'
-                    link_to_task = "".join(['https://dvmn.org', lesson_url])
+                    link_to_task = f"https://dvmn.org{lesson_url}"
                 else:
                     step_to_do = 'The task is solved. You can start a new one.'
                     link_to_task = ""
