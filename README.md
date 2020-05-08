@@ -17,9 +17,9 @@ Also you need to save in the same **.env** file your telegram
 bot API key and your telegram chat id.
 Your **.env** file should look like this:
 ```
-TOKEN=your devman API token
-T_API_TOKEN=your telegram bot API key
-CHAT_ID=your telegram chat ID
+DVMN_API_TOKEN=your devman API token
+TELEGRAM_API_TOKEN=your telegram bot API key
+TELEGRAM_CHAT_ID=your telegram chat ID
 ```
 
 ### Project Goals

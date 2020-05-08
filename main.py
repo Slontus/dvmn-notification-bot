@@ -26,9 +26,9 @@ if __name__ == "__main__":
                         level=logging.DEBUG,
                         handlers=[logging.FileHandler('log.log', 'w', 'utf-8')])
     load_dotenv()
-    token = os.getenv("TOKEN")
-    chat_id = os.getenv("CHAT_ID")
-    bot = telegram.Bot(token=os.getenv('T_API_TOKEN'))
+    token = os.getenv("DVMN_API_TOKEN")
+    chat_id = os.getenv("TELEGRAM_CHAT_ID")
+    bot = telegram.Bot(token=os.getenv('TELEGRAM_API_TOKEN'))
     timestamp = None
     while True:
         try:
