@@ -13,11 +13,8 @@ def get_status(method, timeout, _timestamp, _token):
     url = "".join([DVMN_API, method])
     header = {"Authorization": f"Token {_token}"}
     payload = {"timestamp": _timestamp}
-    try:
-        response = requests.get(url, timeout=timeout, headers=header, params=payload)
-        response.raise_for_status()
-    except requests.exceptions.HTTPError as _error:
-        raise requests.exceptions.HTTPError(f"Program had to stop. Not possible to get status: f{_error}")
+    response = requests.get(url, timeout=timeout, headers=header, params=payload)
+    response.raise_for_status()
     return response.json()
 
 
