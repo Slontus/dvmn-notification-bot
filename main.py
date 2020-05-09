@@ -10,7 +10,7 @@ LONG_POLLING_METHOD = "long_polling/"
 
 
 def get_status(method, timeout, _timestamp, _token):
-    url = "".join([DVMN_API, method])
+    url = f"{DVMN_API}{method}"
     header = {"Authorization": f"Token {_token}"}
     payload = {"timestamp": _timestamp}
     response = requests.get(url, timeout=timeout, headers=header, params=payload)
