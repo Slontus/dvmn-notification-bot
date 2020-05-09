@@ -1,6 +1,5 @@
 import requests
 import os
-import time
 import telegram
 from dotenv import load_dotenv
 import logging
@@ -52,9 +51,6 @@ if __name__ == "__main__":
             logging.error(error)
             break
         except requests.exceptions.ReadTimeout as error:
-            logging.error(error)
             continue
         except requests.exceptions.ConnectionError as error:
-            logging.error(error)
-            time.sleep(120)
             continue
