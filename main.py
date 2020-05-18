@@ -4,9 +4,22 @@ import telegram
 import time
 from dotenv import load_dotenv
 import logging
+from logging.handlers import RotatingFileHandler
 
 DVMN_API = "https://dvmn.org/api/"
 LONG_POLLING_METHOD = "long_polling/"
+
+
+class TelegramLogsHandler(logging.Handler):
+
+    def __init__(self, _token, _chat_id, ):
+        super().__init__()
+        self.chat_id = _chat_id
+        self.bot = telegram.Bot(_token)
+
+    def emit(self, record):
+        log_entry = self.format(record)
+        self.bot.send_message(chat_id=chat_id, text=log_entry)
 
 
 def get_status(method, timeout, _timestamp, _token):
@@ -21,11 +34,16 @@ def get_status(method, timeout, _timestamp, _token):
 if __name__ == "__main__":
     logging.basicConfig(format="[LINE:%(lineno)d]# %(levelname)-8s [%(asctime)s] %(message)s",
                         level=logging.DEBUG,
-                        handlers=[logging.FileHandler('log.log', 'w', 'utf-8')])
+                        handlers=[RotatingFileHandler('log.log', maxBytes=20000, encoding='utf-8', backupCount=2)])
     load_dotenv()
     token = os.getenv("DVMN_API_TOKEN")
     chat_id = os.getenv("TELEGRAM_CHAT_ID")
-    bot = telegram.Bot(token=os.getenv('TELEGRAM_API_TOKEN'))
+    telegram_token = os.getenv('TELEGRAM_API_TOKEN')
+    logger = logging.getLogger("Bot Logger")
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(TelegramLogsHandler(telegram_token, chat_id))
+    logger.info("Notification bot started")
+    bot = telegram.Bot(token=telegram_token)
     timestamp = None
     while True:
         try:
@@ -49,7 +67,8 @@ if __name__ == "__main__":
             elif task_status['status'] == 'timeout':
                 timestamp = task_status['timestamp_to_request']
         except requests.exceptions.HTTPError as error:
-            logging.error(error)
+            logger.info("Bot stopped with error:")
+            logger.error(error)
             break
         except requests.exceptions.ReadTimeout as error:
             continue
