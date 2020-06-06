@@ -5,21 +5,24 @@ import time
 from dotenv import load_dotenv
 import logging
 from logging.handlers import RotatingFileHandler
+from urllib.parse import urljoin
 
 DVMN_API = "https://dvmn.org/api/"
 LONG_POLLING_METHOD = "long_polling/"
 
+logger = logging.getLogger("Bot Logger")
+
 
 class TelegramLogsHandler(logging.Handler):
 
-    def __init__(self, _token, _chat_id, ):
+    def __init__(self, _bot, _chat_id, ):
         super().__init__()
         self.chat_id = _chat_id
-        self.bot = telegram.Bot(_token)
+        self.bot = _bot
 
     def emit(self, record):
         log_entry = self.format(record)
-        self.bot.send_message(chat_id=chat_id, text=log_entry)
+        self.bot.send_message(chat_id=self.chat_id, text=log_entry)
 
 
 def get_status(method, timeout, _timestamp, _token):
@@ -39,11 +42,10 @@ if __name__ == "__main__":
     token = os.getenv("DVMN_API_TOKEN")
     chat_id = os.getenv("TELEGRAM_CHAT_ID")
     telegram_token = os.getenv('TELEGRAM_API_TOKEN')
-    logger = logging.getLogger("Bot Logger")
-    logger.setLevel(logging.DEBUG)
-    logger.addHandler(TelegramLogsHandler(telegram_token, chat_id))
-    logger.info("Notification bot started")
     bot = telegram.Bot(token=telegram_token)
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(TelegramLogsHandler(bot, chat_id))
+    logger.info("Notification bot started")
     timestamp = None
     while True:
         try:
@@ -57,7 +59,7 @@ if __name__ == "__main__":
                 module = lesson_url.split('/')[2]
                 if solution_is_wrong:
                     step_to_do = 'Please correct errors and send it for checking.\n'
-                    link_to_task = f"https://dvmn.org{lesson_url}"
+                    link_to_task = urljoin("https://dvmn.org", lesson_url)
                 else:
                     step_to_do = 'The task is solved. You can start a new one.'
                     link_to_task = ""
